@@ -8,9 +8,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.entity.User;
 
+/*
+ * Un controlador tiene que llevar dos etiquetas, @RestController que demuestra que tipo de controlador es y @RequestMapping es la dirección base
+ * para acceder a todas las funciones que haya dentro del controlador
+ */
 @RestController
 @RequestMapping("/bolas/api/user")
 public class UserController {
+	/*
+	 * @PostMapping sirve para describir una ruta más específica para acceder a la función específica, es decir, para acceder a esta función tienes que escribir:
+	 * localhost:8080/bolas/api/user/register
+	 * @RequestBody lo que hace es transformar los datos que se envían a traves del cuerpo de la petición en el objeto que tu quieras.
+	 * ResponseEntity<TipoDeDatoQueQuieras> es un objeto que se utiliza para dar una respuesta y guardar un código de estado. Por ejemplo el error 404 not found de los navegadores
+	 * se mandan a traves de los objetos ResponseEntity.
+	 */
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody User user){
 		return null;	
