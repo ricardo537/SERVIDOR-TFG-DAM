@@ -1,5 +1,6 @@
 package com.bolas.bolas.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +19,7 @@ import com.bolas.bolas.entity.User;
 public interface UserRepository extends JpaRepository <User, UUID>{
 	//Dentro de aquí tienes que definir las funciones que quieres tener con la siguiente estructura (en inglés): visibilidad TipoDeDatoQueDevuelveLaFunción nombreDeLaFunción(TipoDeDatoQueSeManda nombreDeLaVariableDondeSeGuardaElDatoMandado);
 	public User save(User user);
+	
+	public Optional<User> findByEmailAndPassword(String email, String password);
 	
 }

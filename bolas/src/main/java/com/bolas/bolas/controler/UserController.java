@@ -1,12 +1,16 @@
 package com.bolas.bolas.controler;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bolas.bolas.dto.LoginDTO;
+import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.entity.User;
+import com.bolas.bolas.service.UserService;
 
 /*
  * Un controlador tiene que llevar dos etiquetas, @RestController que demuestra que tipo de controlador es y @RequestMapping es la dirección base
@@ -15,6 +19,14 @@ import com.bolas.bolas.entity.User;
 @RestController
 @RequestMapping("/bolas/api/user")
 public class UserController {
+	
+	/*
+	 * Para conectar el controlador con el servicio hay que definirlo como variable/atributo de la clase para poder utilizarlo
+	 * y es necesario poner la etiqueta @Autowired
+	 */
+	@Autowired
+	private UserService userService;
+	
 	/*
 	 * @PostMapping sirve para describir una ruta más específica para acceder a la función específica, es decir, para acceder a esta función tienes que escribir:
 	 * localhost:8080/bolas/api/user/register
@@ -24,6 +36,14 @@ public class UserController {
 	 */
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody User user){
+		
 		return null;	
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<SessionDTO> login(@RequestBody LoginDTO loginData) {
+		return this.userService.login(loginData);
+	}
+	
+	
 }
