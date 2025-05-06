@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.LoginDTO;
+import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.service.UserService;
@@ -35,9 +36,9 @@ public class UserController {
 	 * se mandan a traves de los objetos ResponseEntity.
 	 */
 	@PostMapping("/register")
-	public ResponseEntity<String> register(@RequestBody User user){
+	public ResponseEntity<String> register(@RequestBody RegisterDTO registerData){
 		
-		return null;	
+		return userService.register(registerData);	
 	}
 	
 	@PostMapping("/login")

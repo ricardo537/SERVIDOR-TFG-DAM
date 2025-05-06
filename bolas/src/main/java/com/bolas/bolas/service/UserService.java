@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.LoginDTO;
+import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.UserRepository;
@@ -32,5 +33,24 @@ public class UserService {
 		}
 		SessionDTO session = new SessionDTO(userLogged.get().getEmail(), userLogged.get().getPassword());
 		return new ResponseEntity<SessionDTO>(session, HttpStatus.ACCEPTED);
+	}
+	
+	
+	public ResponseEntity<String> register(RegisterDTO registerData) {
+	    
+	    if (userRepository.existsByEmail(registerData.getEmail())) {
+	        return new ResponseEntity<String>("El email ya existe", HttpStatus.CONFLICT);
+	    	}
+	    User registro=new User();
+	    registro.setEmail(registerData.getEmail());
+	    registro.setPassword(registerData.getPassword());
+	    registro.setName(registerData.getName());
+	   
+	    User guardado=userRepository.save(registro);
+	    
+	    if (guardado==null) {
+	    	return new ResponseEntity<String>("No se ha podido registrar", HttpStatus.CONFLICT);
+	    }
+	    return new ResponseEntity<String>("Se ha registrado correctamente", HttpStatus.OK);
 	}
 }
