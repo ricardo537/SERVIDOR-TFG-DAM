@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
@@ -43,8 +44,12 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<SessionDTO> login(@RequestBody LoginDTO loginData) {
-		return this.userService.login(loginData);
+		return userService.login(loginData);
 	}
 	
+	@PostMapping("/delete")
+	public ResponseEntity<String> delete(@RequestBody DeleteDTO deleteData) {
+		return userService.delete(deleteData);
+	}
 	
 }

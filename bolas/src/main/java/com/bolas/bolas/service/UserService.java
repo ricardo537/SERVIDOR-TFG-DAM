@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
@@ -52,5 +53,16 @@ public class UserService {
 	    	return new ResponseEntity<String>("No se ha podido registrar", HttpStatus.CONFLICT);
 	    }
 	    return new ResponseEntity<String>("Se ha registrado correctamente", HttpStatus.OK);
+	}
+	
+	public ResponseEntity<String> delete(DeleteDTO deleteData) {
+		
+		Optional <User> delete= userRepository.findByEmailAndPassword(deleteData.getEmail(), deleteData.getPassword());
+		if (delete.isEmpty()) {
+			return new ResponseEntity<String>("Las credenciales no coinciden", HttpStatus.NOT_FOUND);
+		
+		}
+		userRepository.delete(delete.get());
+			return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.FOUND);
 	}
 }
