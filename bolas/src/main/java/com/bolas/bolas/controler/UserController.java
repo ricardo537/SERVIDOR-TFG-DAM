@@ -38,7 +38,6 @@ public class UserController {
 	 */
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody RegisterDTO registerData){
-		
 		return userService.register(registerData);	
 	}
 	

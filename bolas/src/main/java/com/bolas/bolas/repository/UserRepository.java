@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository <User, UUID>{
 	//Dentro de aquí tienes que definir las funciones que quieres tener con la siguiente estructura (en inglés): visibilidad TipoDeDatoQueDevuelveLaFunción nombreDeLaFunción(TipoDeDatoQueSeManda nombreDeLaVariableDondeSeGuardaElDatoMandado);
 	public User save(User user);
 	
+	public Optional<User> findByEmail(String email);
+	
 	public Optional<User> findByEmailAndPassword(String email, String password);
 	
 	public boolean existsByEmail(String email);

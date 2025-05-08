@@ -41,7 +41,7 @@ public class UserService {
 	    
 	    if (userRepository.existsByEmail(registerData.getEmail())) {
 	        return new ResponseEntity<String>("El email ya existe", HttpStatus.CONFLICT);
-	    	}
+	    }
 	    User registro=new User();
 	    registro.setEmail(registerData.getEmail());
 	    registro.setPassword(registerData.getPassword());
