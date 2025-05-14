@@ -1,5 +1,6 @@
 package com.bolas.bolas.entity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -33,12 +34,15 @@ public class User {
 	private String password;
 	@Column(nullable=false)
 	private String name;
-	public User(UUID id, String email, String password, String name) {
+	@Column(nullable=true)
+	private String description;
+	public User(UUID id, String email, String password, String name, String description) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.name = name;
+		this.description = description;
 	}
 	public UUID getId() {
 		return id;
@@ -64,8 +68,26 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public User() {
 		super();
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(description, other.description) && Objects.equals(email, other.email)
+				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
 	}
 	
 }

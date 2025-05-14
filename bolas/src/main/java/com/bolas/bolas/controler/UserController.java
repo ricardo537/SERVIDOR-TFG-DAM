@@ -11,6 +11,7 @@ import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
+import com.bolas.bolas.dto.UpdateDTO;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.service.UserService;
 
@@ -49,6 +50,11 @@ public class UserController {
 	@PostMapping("/delete")
 	public ResponseEntity<String> delete(@RequestBody DeleteDTO deleteData) {
 		return userService.delete(deleteData);
+	}
+	
+	@PostMapping("/update")
+	public ResponseEntity<SessionDTO> update(@RequestBody UpdateDTO updateData) {
+		return userService.update(updateData);
 	}
 	
 }

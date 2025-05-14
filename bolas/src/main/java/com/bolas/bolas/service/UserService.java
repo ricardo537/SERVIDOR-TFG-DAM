@@ -11,6 +11,7 @@ import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
+import com.bolas.bolas.dto.UpdateDTO;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.UserRepository;
 
@@ -64,5 +65,22 @@ public class UserService {
 		}
 		userRepository.delete(delete.get());
 			return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.FOUND);
+	}
+
+	public ResponseEntity<SessionDTO> update(UpdateDTO updateData) {
+		Optional<User> user = userRepository.findByEmailAndPassword(updateData.getSession().getEmail(), updateData.getSession().getPassword());
+		if (user.isEmpty()) {
+			return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		Optional<User> userRepited = userRepository.findByEmail(updateData.getEmail());
+		if (userRepited.isPresent()) {
+			return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.CONFLICT);
+		}
+		
+		User userUpdated = updateData.updateUser(user.get());
+		userRepository.save(userUpdated);
+		
+		return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.ACCEPTED);
 	}
 }
