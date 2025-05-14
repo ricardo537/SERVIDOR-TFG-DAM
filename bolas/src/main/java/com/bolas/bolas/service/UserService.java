@@ -83,4 +83,14 @@ public class UserService {
 		
 		return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.ACCEPTED);
 	}
+	
+	public boolean updateProfileImg(String email, String fileName) {
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isPresent()) {
+			user.get().setImg(fileName);
+			userRepository.save(user.get());
+			return true;
+		}
+		return false;
+	}
 }
