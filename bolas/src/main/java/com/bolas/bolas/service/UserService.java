@@ -126,6 +126,6 @@ public class UserService {
 			return new ResponseEntity<IdDTO>(new IdDTO(), HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<IdDTO>(new IdDTO(user.get().getId()), HttpStatus.FOUND);
+		return new ResponseEntity<IdDTO>(new IdDTO(user.get().getId()), HttpStatus.OK);
 	}
 }
