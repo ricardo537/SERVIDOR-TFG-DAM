@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
+import com.bolas.bolas.dto.ProfileDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UpdateDTO;
+import com.bolas.bolas.entity.Stats;
 import com.bolas.bolas.entity.User;
+import com.bolas.bolas.repository.StatsRepository;
 import com.bolas.bolas.repository.UserRepository;
 
 /*
@@ -27,6 +30,8 @@ public class UserService {
 	 */
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private StatsRepository statsRepository;
 	
 	public ResponseEntity<SessionDTO> login(LoginDTO loginData) {
 		Optional<User> userLogged = userRepository.findByEmailAndPassword(loginData.getEmail(), loginData.getPassword());
@@ -92,5 +97,24 @@ public class UserService {
 			return true;
 		}
 		return false;
+	}
+	
+	public ResponseEntity<ProfileDTO> getMyProfile(SessionDTO session) {
+		Optional<User> user = userRepository.findByEmailAndPassword(session.getEmail(), session.getPassword());
+		
+		if (user.isEmpty()) {
+			return new ResponseEntity<ProfileDTO>(new ProfileDTO(), HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		Optional<Stats> stats = statsRepository.findById(user.get().getId());
+		Stats sts;
+		
+		if (stats.isEmpty()) {
+			sts = new Stats();
+		} else {
+			sts = stats.get();
+		}
+		
+		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts), HttpStatus.OK);
 	}
 }

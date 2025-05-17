@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.DeleteDTO;
 import com.bolas.bolas.dto.LoginDTO;
+import com.bolas.bolas.dto.ProfileDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UpdateDTO;
@@ -55,6 +56,11 @@ public class UserController {
 	@PostMapping("/update")
 	public ResponseEntity<SessionDTO> update(@RequestBody UpdateDTO updateData) {
 		return userService.update(updateData);
+	}
+	
+	@PostMapping("getMyProfile")
+	public ResponseEntity<ProfileDTO> getMyProfile(@RequestBody SessionDTO session) {
+		return userService.getMyProfile(session);
 	}
 	
 }
