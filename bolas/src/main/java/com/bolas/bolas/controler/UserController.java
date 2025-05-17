@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.DeleteDTO;
+import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.ProfileDTO;
 import com.bolas.bolas.dto.RegisterDTO;
@@ -58,9 +59,14 @@ public class UserController {
 		return userService.update(updateData);
 	}
 	
-	@PostMapping("getMyProfile")
-	public ResponseEntity<ProfileDTO> getMyProfile(@RequestBody SessionDTO session) {
-		return userService.getMyProfile(session);
+	@PostMapping("getProfile")
+	public ResponseEntity<ProfileDTO> getProfile(@RequestBody IdDTO id) {
+		return userService.getProfile(id);
+	}
+	
+	@PostMapping("getMyId")
+	public ResponseEntity<IdDTO> getMyId(@RequestBody SessionDTO session) {
+		return userService.getMyId(session);
 	}
 	
 }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.DeleteDTO;
+import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.ProfileDTO;
 import com.bolas.bolas.dto.RegisterDTO;
@@ -99,11 +100,11 @@ public class UserService {
 		return false;
 	}
 	
-	public ResponseEntity<ProfileDTO> getMyProfile(SessionDTO session) {
-		Optional<User> user = userRepository.findByEmailAndPassword(session.getEmail(), session.getPassword());
+	public ResponseEntity<ProfileDTO> getProfile(IdDTO id) {
+		Optional<User> user = userRepository.findById(id.getId());
 		
 		if (user.isEmpty()) {
-			return new ResponseEntity<ProfileDTO>(new ProfileDTO(), HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<ProfileDTO>(new ProfileDTO(), HttpStatus.NOT_FOUND);
 		}
 		
 		Optional<Stats> stats = statsRepository.findById(user.get().getId());
@@ -116,5 +117,15 @@ public class UserService {
 		}
 		
 		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts), HttpStatus.OK);
+	}
+	
+	public ResponseEntity<IdDTO> getMyId(SessionDTO session) {
+		Optional<User> user = userRepository.findByEmailAndPassword(session.getEmail(), session.getPassword());
+		
+		if (user.isEmpty()) {
+			return new ResponseEntity<IdDTO>(new IdDTO(), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<IdDTO>(new IdDTO(user.get().getId()), HttpStatus.FOUND);
 	}
 }
