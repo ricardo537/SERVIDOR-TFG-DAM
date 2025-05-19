@@ -1,5 +1,6 @@
 package com.bolas.bolas.entity;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /*
@@ -38,6 +40,8 @@ public class User {
 	private String description;
 	@Column(nullable = true)
 	private String img;
+	@OneToMany(mappedBy = "user")
+	private List<Event> events;
 	public User(UUID id, String email, String password, String name, String description, String img) {
 		super();
 		this.id = id;
@@ -46,6 +50,17 @@ public class User {
 		this.name = name;
 		this.description = description;
 		this.img = img;
+	}
+	public User(UUID id, String email, String password, String name, String description, String img,
+			List<Event> events) {
+		super();
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.description = description;
+		this.img = img;
+		this.events = events;
 	}
 	public UUID getId() {
 		return id;
@@ -98,5 +113,12 @@ public class User {
 		return Objects.equals(description, other.description) && Objects.equals(email, other.email)
 				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
 	}
+	public List<Event> getEvents() {
+		return events;
+	}
+	public void setEvents(List<Event> events) {
+		this.events = events;
+	}
+	
 	
 }
