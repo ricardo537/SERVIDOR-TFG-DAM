@@ -53,6 +53,7 @@ public class UserService {
 	    registro.setEmail(registerData.getEmail());
 	    registro.setPassword(registerData.getPassword());
 	    registro.setName(registerData.getName());
+	    registro.setGender(registerData.getGender());
 	   
 	    User guardado=userRepository.save(registro);
 	    

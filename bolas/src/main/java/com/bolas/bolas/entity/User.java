@@ -40,9 +40,11 @@ public class User {
 	private String description;
 	@Column(nullable = true)
 	private String img;
+	@Column(nullable = false)
+	private String gender;
 	@OneToMany(mappedBy = "user")
 	private List<Event> events;
-	public User(UUID id, String email, String password, String name, String description, String img) {
+	public User(UUID id, String email, String password, String name, String description, String img, String gender) {
 		super();
 		this.id = id;
 		this.email = email;
@@ -50,17 +52,7 @@ public class User {
 		this.name = name;
 		this.description = description;
 		this.img = img;
-	}
-	public User(UUID id, String email, String password, String name, String description, String img,
-			List<Event> events) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.name = name;
-		this.description = description;
-		this.img = img;
-		this.events = events;
+		this.gender = gender;
 	}
 	public UUID getId() {
 		return id;
@@ -97,6 +89,12 @@ public class User {
 	}
 	public void setImg(String img) {
 		this.img = img;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	public User() {
 		super();

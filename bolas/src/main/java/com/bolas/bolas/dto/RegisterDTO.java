@@ -5,12 +5,14 @@ public class RegisterDTO {
 	private String email;
 	private String password;
 	private String name;
+	private String gender;
 	
-	public RegisterDTO(String email, String password, String name) {
+	public RegisterDTO(String email, String password, String name, String gender) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.name = name;
+		this.gender = gender;
 	}
 
 	public RegisterDTO() {
@@ -39,6 +41,14 @@ public class RegisterDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 }
