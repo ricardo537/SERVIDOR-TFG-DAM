@@ -1,13 +1,18 @@
 package com.bolas.bolas.controler;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +53,20 @@ public class MediaController {
 			return Map.of("url", url);
 		}
 		return Map.of("url", "");
+	}
+	
+	@GetMapping("{fileName}")
+	public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
+		try {
+			Resource file = this.storageService.loadAsResource(fileName);
+			String contentType = Files.probeContentType(file.getFile().toPath());
+			
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(file);
+		} catch (IOException e) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		}
+		
+		
 	}
 	
 }
