@@ -44,8 +44,6 @@ public class User {
 	private String gender;
 	@OneToMany(mappedBy = "user")
 	private List<Event> events;
-	@OneToMany(mappedBy = "creator")
-	private List<Group> groups;
 	public User(UUID id, String email, String password, String name, String description, String img, String gender) {
 		super();
 		this.id = id;
@@ -118,12 +116,6 @@ public class User {
 	}
 	public void setEvents(List<Event> events) {
 		this.events = events;
-	}
-	public List<Group> getGroups() {
-		return groups;
-	}
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
 	}
 	
 }

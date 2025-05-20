@@ -1,5 +1,8 @@
 package com.bolas.bolas.dto;
 
+import com.bolas.bolas.entity.Group;
+import com.bolas.bolas.entity.User;
+
 public class GroupCreationDTO {
 
 	private String name;
@@ -31,4 +34,11 @@ public class GroupCreationDTO {
 		this.session = session;
 	}
 
+	public Group toGroup(User creator) {
+		Group group = new Group();
+		group.setCreator(creator.getName());
+		group.setImg("");
+		group.setName(this.name);
+		return group;
+	}
 }
