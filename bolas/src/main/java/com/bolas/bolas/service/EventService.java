@@ -68,8 +68,14 @@ public class EventService {
 		List<EventDTO> eventsDTO = events.stream()
 				.map((event) -> {
 					//Falta comprobar si hay plazas
+					String name;
+					if (event.getUser() == null) {
+						name = "El usuario ya no existe";
+					} else {
+						name = event.getUser().getName();
+					}
 					if (isValidEvent(event, user.get(), filter)) {
-						return new EventDTO(event, user.get().getName(),0);
+						return new EventDTO(event, name,0);
 					}
 					return null;
 				}).filter(e -> e != null)

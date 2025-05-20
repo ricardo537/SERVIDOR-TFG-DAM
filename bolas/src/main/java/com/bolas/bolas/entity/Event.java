@@ -61,7 +61,7 @@ public class Event {
 	private String typeParticipant;
 	
 	@ManyToOne
-	@JoinColumn(name = "creatorId", nullable = false)
+	@JoinColumn(name = "creatorId", nullable = true)
 	private User user;
 
 	public Event() {

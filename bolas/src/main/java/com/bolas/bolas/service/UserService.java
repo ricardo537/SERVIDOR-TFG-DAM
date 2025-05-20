@@ -16,8 +16,12 @@ import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UpdateDTO;
 import com.bolas.bolas.entity.Stats;
 import com.bolas.bolas.entity.User;
+import com.bolas.bolas.repository.EventRepository;
+import com.bolas.bolas.repository.FollowRepository;
 import com.bolas.bolas.repository.StatsRepository;
 import com.bolas.bolas.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
 
 /*
  * Para que spring detecte que esto es un servicio hay que escribir la etiqueta @Service. El servicio contendrá toda la  lógica de la aplicación.
@@ -33,6 +37,10 @@ public class UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private StatsRepository statsRepository;
+	@Autowired
+	private FollowRepository followRepository;
+	@Autowired
+	private EventRepository eventRepository;
 	
 	public ResponseEntity<SessionDTO> login(LoginDTO loginData) {
 		Optional<User> userLogged = userRepository.findByEmailAndPassword(loginData.getEmail(), loginData.getPassword());
@@ -63,6 +71,7 @@ public class UserService {
 	    return new ResponseEntity<String>("Se ha registrado correctamente", HttpStatus.OK);
 	}
 	
+	@Transactional
 	public ResponseEntity<String> delete(DeleteDTO deleteData) {
 		
 		Optional <User> delete= userRepository.findByEmailAndPassword(deleteData.getEmail(), deleteData.getPassword());
@@ -70,8 +79,21 @@ public class UserService {
 			return new ResponseEntity<String>("Las credenciales no coinciden", HttpStatus.NOT_FOUND);
 		
 		}
-		userRepository.delete(delete.get());
-			return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.OK);
+		
+		User user = delete.get();
+		
+		followRepository.deleteByFollowerOrFollows(user, user);
+		
+		Optional<Stats> stats = statsRepository.findById(user.getId());
+		
+		eventRepository.deleteAll(user.getEvents());
+		
+		if (stats.isPresent()) {
+			statsRepository.delete(stats.get());
+		}
+		
+		userRepository.delete(user);
+		return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.OK);
 	}
 
 	public ResponseEntity<SessionDTO> update(UpdateDTO updateData) {

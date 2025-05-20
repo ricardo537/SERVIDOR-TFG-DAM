@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bolas.bolas.entity.Follow;
 import com.bolas.bolas.entity.FollowId;
+import com.bolas.bolas.entity.User;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, FollowId> {
@@ -12,5 +13,7 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
 	Follow save(Follow follow);
 	
 	void delete(Follow follow);
+	
+	void deleteByFollowerOrFollows(User follower, User follows);
 	
 }
