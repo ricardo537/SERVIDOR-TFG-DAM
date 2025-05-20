@@ -44,6 +44,10 @@ public class User {
 	private String gender;
 	@OneToMany(mappedBy = "user")
 	private List<Event> events;
+	@OneToMany(mappedBy = "follower")
+	private List<Follow> following;
+	@OneToMany(mappedBy = "follows")
+	private List<Follow> followers;
 	public User(UUID id, String email, String password, String name, String description, String img, String gender) {
 		super();
 		this.id = id;
@@ -116,6 +120,18 @@ public class User {
 	}
 	public void setEvents(List<Event> events) {
 		this.events = events;
+	}
+	public List<Follow> getFollowing() {
+		return following;
+	}
+	public void setFollowing(List<Follow> following) {
+		this.following = following;
+	}
+	public List<Follow> getFollowers() {
+		return followers;
+	}
+	public void setFollowers(List<Follow> followers) {
+		this.followers = followers;
 	}
 	
 }
