@@ -84,9 +84,11 @@ public class UserService {
 		
 		followRepository.deleteByFollowerOrFollows(user, user);
 		
-		Optional<Stats> stats = statsRepository.findById(user.getId());
+		user.getEvents().stream().forEach((event) -> {
+			event.setUser(null);
+		});
 		
-		eventRepository.deleteAll(user.getEvents());
+		Optional<Stats> stats = statsRepository.findById(user.getId());
 		
 		if (stats.isPresent()) {
 			statsRepository.delete(stats.get());
