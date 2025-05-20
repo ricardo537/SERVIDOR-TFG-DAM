@@ -2,6 +2,8 @@ package com.bolas.bolas.entity;
 
 import java.util.UUID;
 
+import com.bolas.bolas.dto.StatsDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -96,4 +98,10 @@ public class Stats {
 		this.user = user;
 	}
 	
+	public void update(StatsDTO stats) {
+		this.soccer = stats.getSoccer();
+		this.basketball = stats.getBasketball();
+		this.volleyball = stats.getVolleyball();
+		this.tenis = stats.getTenis();
+	}
 }

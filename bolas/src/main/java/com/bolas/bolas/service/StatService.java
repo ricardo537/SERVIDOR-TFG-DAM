@@ -31,8 +31,14 @@ public class StatService {
 		
 		UUID userId = user.get().getId();
 		Optional<Stats> existingStats = statsRepository.findById(userId);
-
-	    Stats statsToSave = statsData.toStats(user.get());
+		
+		Stats statsToSave;
+		if (existingStats.isEmpty()) {
+			 statsToSave = statsData.toStats(user.get());
+		} else {
+			existingStats.get().update(statsData);
+			statsToSave = existingStats.get();
+		}
 
 	    Stats saved = statsRepository.saveAndFlush(statsToSave);
 		
