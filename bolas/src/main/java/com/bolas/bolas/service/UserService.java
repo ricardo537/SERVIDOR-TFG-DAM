@@ -71,7 +71,7 @@ public class UserService {
 		
 		}
 		userRepository.delete(delete.get());
-			return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.FOUND);
+			return new ResponseEntity<String>("El usuario se ha borrado con éxito", HttpStatus.OK);
 	}
 
 	public ResponseEntity<SessionDTO> update(UpdateDTO updateData) {

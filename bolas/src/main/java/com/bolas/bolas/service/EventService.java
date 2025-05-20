@@ -1,16 +1,21 @@
 package com.bolas.bolas.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.EventDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
+import com.bolas.bolas.dto.FilterEventDTO;
+import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.entity.Event;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.EventRepository;
@@ -41,5 +46,47 @@ public class EventService {
 		}
 		
 		return new ResponseEntity<Boolean>(false, HttpStatus.NOT_ACCEPTABLE);
+	}
+	
+	//FALTA TERMINARLO
+	public ResponseEntity<Boolean> join(JoinEventDTO join) {
+		return null;
+	}
+	
+	public ResponseEntity<List<EventDTO>> getFilteredEvents(FilterEventDTO filter, int page, int size) {
+		Optional<User> user = userRepository.findByEmailAndPassword(filter.getSession().getEmail(), filter.getSession().getPassword());
+		if (user.isEmpty()) {
+			return new ResponseEntity<List<EventDTO>>(List.of(), HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		LocalDateTime now = LocalDateTime.now();
+		if (filter.getStartDate() == null || filter.getStartDate().isBefore(now)) {
+			filter.setStartDate(now);
+		}
+		
+		List<Event> events = eventRepository.findByStartDateAfter(filter.getStartDate(), PageRequest.of(page, size)).getContent();
+		List<EventDTO> eventsDTO = events.stream()
+				.map((event) -> {
+					//Falta comprobar si hay plazas
+					if (isValidEvent(event, user.get(), filter)) {
+						return new EventDTO(event, user.get().getName(),0);
+					}
+					return null;
+				}).filter(e -> e != null)
+				.collect(Collectors.toList());
+		
+		return new ResponseEntity<List<EventDTO>>(eventsDTO, HttpStatus.OK);
+	}
+	
+	public boolean isValidEvent(Event event, User user, FilterEventDTO filter) {
+		if (event.getGender().equals(user.getGender()) || event.getGender().equals("mixto")) {
+			//Falta comprobar que no esté lleno
+			if ((event.getGender().equals(filter.getGender()) || filter.getGender().equals("")) && (filter.getSport().equals(event.getSport()) || filter.getSport().equals("")) &&
+					(filter.getType().equals(event.getType()) || filter.getType().equals("")) && (filter.getTypeParticipant().equals(event.getTypeParticipant()) || filter.getTypeParticipant().equals(""))) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

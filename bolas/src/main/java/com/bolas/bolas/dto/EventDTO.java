@@ -3,30 +3,35 @@ package com.bolas.bolas.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.bolas.bolas.entity.Event;
+
 public class EventDTO {
-/*
+	
 	private UUID id;
 	private String name;
 	private String description;
 	private String address;
 	private LocalDateTime startDate;
 	private LocalDateTime endDate;
+	private LocalDateTime creationDate;
 	private String type;
+	private String sport;
 	private Integer minParticipants;
 	private Integer maxParticipants;
 	private Double price;
-	private String category;
 	private String gender;
 	private String typeParticipant;
-	private UUID creatorId;
+	private String creatorName;
+	private int participants;
 	
 	public EventDTO() {
 		super();
 	}
 
 	public EventDTO(UUID id, String name, String description, String address, LocalDateTime startDate,
-			LocalDateTime endDate, String type, Integer minParticipants, Integer maxParticipants, Double price,
-			String category, String gender, String typeParticipant, Boolean results, UUID creatorId) {
+			LocalDateTime endDate, LocalDateTime creationDate, String type, String sport, Integer minParticipants,
+			Integer maxParticipants, Double price, String gender, String typeParticipant, String creatorName,
+			int participants) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -34,15 +39,35 @@ public class EventDTO {
 		this.address = address;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.creationDate = creationDate;
 		this.type = type;
+		this.sport = sport;
 		this.minParticipants = minParticipants;
 		this.maxParticipants = maxParticipants;
 		this.price = price;
-		this.category = category;
 		this.gender = gender;
 		this.typeParticipant = typeParticipant;
-		this.results = results;
-		this.creatorId = creatorId;
+		this.creatorName = creatorName;
+		this.participants = participants;
+	}
+	
+	public EventDTO(Event event, String creatorName, int participants) {
+		this.id = event.getId();
+		this.name = event.getName();
+		this.description = event.getDescription();
+		this.address = event.getAddress();
+		this.startDate = event.getStartDate();
+		this.endDate = event.getEndDate();
+		this.creationDate = event.getCreationDate();
+		this.type = event.getType();
+		this.sport = event.getSport();
+		this.minParticipants = event.getMinParticipants();
+		this.maxParticipants = event.getMaxParticipants();
+		this.price = event.getPrice();
+		this.gender = event.getGender();
+		this.typeParticipant = event.getTypeParticipant();
+		this.creatorName = creatorName;
+		this.participants = participants;
 	}
 
 	public UUID getId() {
@@ -93,12 +118,28 @@ public class EventDTO {
 		this.endDate = endDate;
 	}
 
+	public LocalDateTime getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(LocalDateTime creationDate) {
+		this.creationDate = creationDate;
+	}
+
 	public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getSport() {
+		return sport;
+	}
+
+	public void setSport(String sport) {
+		this.sport = sport;
 	}
 
 	public Integer getMinParticipants() {
@@ -125,14 +166,6 @@ public class EventDTO {
 		this.price = price;
 	}
 
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
 	public String getGender() {
 		return gender;
 	}
@@ -149,20 +182,20 @@ public class EventDTO {
 		this.typeParticipant = typeParticipant;
 	}
 
-	public Boolean getResults() {
-		return results;
+	public String getCreatorName() {
+		return creatorName;
 	}
 
-	public void setResults(Boolean results) {
-		this.results = results;
+	public void setCreatorName(String creatorName) {
+		this.creatorName = creatorName;
 	}
 
-	public UUID getCreatorId() {
-		return creatorId;
+	public int getParticipants() {
+		return participants;
 	}
 
-	public void setCreatorId(UUID creatorId) {
-		this.creatorId = creatorId;
+	public void setParticipants(int participants) {
+		this.participants = participants;
 	}
-	*/
+	
 }
