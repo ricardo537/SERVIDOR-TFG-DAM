@@ -14,8 +14,9 @@ public class ProfileDTO {
 	private long followers;
 	private long follows;
 	private StatsDSDTO stats;
+	private String gender;
 	
-	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats) {
+	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats, String gender) {
 		super();
 		Id = id;
 		this.name = name;
@@ -24,6 +25,7 @@ public class ProfileDTO {
 		this.followers = followers;
 		this.follows = follows;
 		this.stats = stats;
+		this.gender = gender;
 	}
 
 	public ProfileDTO() {
@@ -86,7 +88,15 @@ public class ProfileDTO {
 		this.stats = stats;
 	}
 	
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	public static ProfileDTO toProfile(User user, Stats stats, long followers, long follows) {
-		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), followers, follows, StatsDSDTO.toStatsDSDTO(stats));
+		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), followers, follows, StatsDSDTO.toStatsDSDTO(stats), user.getGender());
 	}
 }

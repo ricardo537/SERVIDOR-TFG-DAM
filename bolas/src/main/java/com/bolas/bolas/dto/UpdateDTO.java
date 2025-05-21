@@ -9,18 +9,20 @@ public class UpdateDTO {
 	private String name;
 	private String description;
 	private SessionDTO session;
+	private String gender;
 	
 	public UpdateDTO() {
 		super();
 	}
 
-	public UpdateDTO(String email, String password, String name, String description, SessionDTO session) {
+	public UpdateDTO(String email, String password, String name, String description, SessionDTO session, String gender) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.description = description;
 		this.session = session;
+		this.gender = gender;
 	}
 
 	public String getEmail() {
@@ -63,6 +65,14 @@ public class UpdateDTO {
 		this.session = session;
 	}
 
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	//Falta cambiarlo
 	public User updateUser(User user) {
 		if (!email.equals("") && !user.getEmail().equals(email)) {
@@ -78,6 +88,9 @@ public class UpdateDTO {
 		}
 		if (!description.equals("") && !description.equals(user.getDescription())) {
 			user.setDescription(description);
+		}
+		if (!gender.equals("") && !user.getGender().equals(gender)) {
+			user.setGender(gender);
 		}
 		return user;
 	}
