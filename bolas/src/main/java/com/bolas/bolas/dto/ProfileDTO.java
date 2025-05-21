@@ -11,11 +11,11 @@ public class ProfileDTO {
 	private String name;
 	private String description;
 	private String img;
-	private int followers;
-	private int follows;
+	private long followers;
+	private long follows;
 	private StatsDSDTO stats;
 	
-	public ProfileDTO(UUID id, String name, String description, String img, int followers, int follows, StatsDSDTO stats) {
+	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats) {
 		super();
 		Id = id;
 		this.name = name;
@@ -62,19 +62,19 @@ public class ProfileDTO {
 		this.img = img;
 	}
 
-	public int getFollowers() {
+	public long getFollowers() {
 		return followers;
 	}
 
-	public void setFollowers(int followers) {
+	public void setFollowers(long followers) {
 		this.followers = followers;
 	}
 
-	public int getFollows() {
+	public long getFollows() {
 		return follows;
 	}
 
-	public void setFollows(int follows) {
+	public void setFollows(long follows) {
 		this.follows = follows;
 	}
 
@@ -86,7 +86,7 @@ public class ProfileDTO {
 		this.stats = stats;
 	}
 	
-	public static ProfileDTO toProfile(User user, Stats stats) {
-		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), 0, 0, StatsDSDTO.toStatsDSDTO(stats));
+	public static ProfileDTO toProfile(User user, Stats stats, long followers, long follows) {
+		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), followers, follows, StatsDSDTO.toStatsDSDTO(stats));
 	}
 }

@@ -144,7 +144,10 @@ public class UserService {
 			sts = stats.get();
 		}
 		
-		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts), HttpStatus.OK);
+		long followers = followRepository.countByFollows(user.get());
+		long follows = followRepository.countByFollower(user.get());
+		
+		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts, followers, follows), HttpStatus.OK);
 	}
 	
 	public ResponseEntity<IdDTO> getMyId(SessionDTO session) {
