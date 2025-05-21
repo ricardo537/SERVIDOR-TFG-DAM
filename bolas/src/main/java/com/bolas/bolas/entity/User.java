@@ -48,6 +48,8 @@ public class User {
 	private List<Follow> following;
 	@OneToMany(mappedBy = "follows")
 	private List<Follow> followers;
+	@OneToMany(mappedBy = "member")
+	private List<Play> plays;
 	public User(UUID id, String email, String password, String name, String description, String img, String gender) {
 		super();
 		this.id = id;
@@ -132,6 +134,12 @@ public class User {
 	}
 	public void setFollowers(List<Follow> followers) {
 		this.followers = followers;
+	}
+	public List<Play> getPlays() {
+		return plays;
+	}
+	public void setPlays(List<Play> plays) {
+		this.plays = plays;
 	}
 	
 }

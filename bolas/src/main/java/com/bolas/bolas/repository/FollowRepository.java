@@ -1,5 +1,7 @@
 package com.bolas.bolas.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,9 @@ public interface FollowRepository extends JpaRepository<Follow, FollowId> {
 	void delete(Follow follow);
 	
 	void deleteByFollowerOrFollows(User follower, User follows);
+	
+	List<Follow> findByFollows(User follows);
+	
+	List<Follow> findByFollower(User follower);
 	
 }

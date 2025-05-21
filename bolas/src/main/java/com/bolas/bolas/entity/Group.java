@@ -1,5 +1,6 @@
 package com.bolas.bolas.entity;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -9,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -27,6 +29,9 @@ public class Group {
 	
 	@JoinColumn(nullable = false)
 	private String creator;
+	
+	@OneToMany(mappedBy = "group")
+	private List<Play> plays;
 
 	public Group() {
 		super();
@@ -70,6 +75,14 @@ public class Group {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public List<Play> getPlays() {
+		return plays;
+	}
+
+	public void setPlays(List<Play> plays) {
+		this.plays = plays;
 	}
 	
 }
