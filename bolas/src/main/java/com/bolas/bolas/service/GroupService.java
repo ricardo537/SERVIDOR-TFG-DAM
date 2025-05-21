@@ -15,6 +15,7 @@ import com.bolas.bolas.dto.FollowDTO;
 import com.bolas.bolas.dto.GroupCreationDTO;
 import com.bolas.bolas.dto.GroupResumeDTO;
 import com.bolas.bolas.dto.SessionDTO;
+import com.bolas.bolas.dto.UpdateGroupDTO;
 import com.bolas.bolas.dto.UserResumeDTO;
 import com.bolas.bolas.entity.Follow;
 import com.bolas.bolas.entity.FollowId;
@@ -151,5 +152,19 @@ public class GroupService {
 		List<GroupResumeDTO> results = groups.stream().map(group -> new GroupResumeDTO(group.getGroup())).collect(Collectors.toList());
 		
 		return new ResponseEntity<List<GroupResumeDTO>>(results, HttpStatus.OK);
+	}
+	
+	public ResponseEntity<Boolean> update(UpdateGroupDTO update) {
+		Optional<Group> group = groupRepository.findById(update.getGroup());
+		
+		if (group.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		Group updated = update.update(group.get());
+		
+		groupRepository.save(updated);
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 }

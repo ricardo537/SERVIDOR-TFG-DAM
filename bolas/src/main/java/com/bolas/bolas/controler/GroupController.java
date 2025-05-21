@@ -19,6 +19,7 @@ import com.bolas.bolas.dto.GroupCreationDTO;
 import com.bolas.bolas.dto.GroupResumeDTO;
 import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.SessionDTO;
+import com.bolas.bolas.dto.UpdateGroupDTO;
 import com.bolas.bolas.dto.UserResumeDTO;
 import com.bolas.bolas.service.GroupService;
 import com.bolas.bolas.service.UserService;
@@ -70,5 +71,10 @@ public class GroupController {
 	@PostMapping("/getMyGroups")
 	public ResponseEntity<List<GroupResumeDTO>> getMyGroups(@RequestBody SessionDTO session) {
 		return groupService.getMyGroups(session);
+	}
+	
+	@PostMapping("/update")
+	public ResponseEntity<Boolean> update(@RequestBody UpdateGroupDTO update) {
+		return groupService.update(update);
 	}
 }
