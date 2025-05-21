@@ -1,6 +1,8 @@
 package com.bolas.bolas.service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import com.bolas.bolas.dto.ProfileDTO;
 import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UpdateDTO;
+import com.bolas.bolas.dto.UserResumeDTO;
 import com.bolas.bolas.entity.Stats;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.EventRepository;
@@ -152,5 +155,13 @@ public class UserService {
 		}
 		
 		return new ResponseEntity<IdDTO>(new IdDTO(user.get().getId()), HttpStatus.OK);
+	}
+	
+	public ResponseEntity<List<UserResumeDTO>> findByName(String name) {
+		List<User> users = userRepository.findByNameStartingWith(name);
+		List<UserResumeDTO> usersResume = users.stream().map(user -> {
+			return new UserResumeDTO(user);
+		}).collect(Collectors.toList());
+		return new ResponseEntity<List<UserResumeDTO>>(usersResume, HttpStatus.OK);
 	}
 }
