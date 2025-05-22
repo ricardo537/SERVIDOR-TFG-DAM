@@ -83,4 +83,9 @@ public class GroupController {
 	public ResponseEntity<Boolean> exit(@RequestBody ExitGroupDTO exit) {
 		return groupService.exit(exit);
 	}
+	
+	@PostMapping("/getMembers")
+	public ResponseEntity<List<UserResumeDTO>> getMembers(@RequestBody IdDTO id) {
+		return groupService.getMembers(id.getId());
+	}
 }

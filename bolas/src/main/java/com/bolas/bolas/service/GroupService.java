@@ -212,4 +212,17 @@ public class GroupService {
 		
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
+	
+	public ResponseEntity<List<UserResumeDTO>> getMembers(UUID id) {
+		Optional<Group> group = groupRepository.findById(id);
+		
+		if (group.isEmpty()) {
+			return new ResponseEntity<List<UserResumeDTO>>(List.of(), HttpStatus.NOT_FOUND);
+		}
+		
+		List<Play> plays = playRepository.findByGroup(group.get());
+		List<UserResumeDTO> members = plays.stream().map(play -> new UserResumeDTO(play.getMember())).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<UserResumeDTO>>(members, HttpStatus.OK);
+	}
 }
