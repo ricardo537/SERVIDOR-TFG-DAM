@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.AddMemberDTO;
+import com.bolas.bolas.dto.ExitGroupDTO;
 import com.bolas.bolas.dto.FollowDTO;
 import com.bolas.bolas.dto.GroupCreationDTO;
 import com.bolas.bolas.dto.GroupResumeDTO;
@@ -76,5 +77,10 @@ public class GroupController {
 	@PostMapping("/update")
 	public ResponseEntity<Boolean> update(@RequestBody UpdateGroupDTO update) {
 		return groupService.update(update);
+	}
+	
+	@PostMapping("/exit")
+	public ResponseEntity<Boolean> exit(@RequestBody ExitGroupDTO exit) {
+		return groupService.exit(exit);
 	}
 }

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.AddMemberDTO;
+import com.bolas.bolas.dto.ExitGroupDTO;
 import com.bolas.bolas.dto.FollowDTO;
 import com.bolas.bolas.dto.GroupCreationDTO;
 import com.bolas.bolas.dto.GroupResumeDTO;
@@ -21,6 +22,7 @@ import com.bolas.bolas.entity.Follow;
 import com.bolas.bolas.entity.FollowId;
 import com.bolas.bolas.entity.Group;
 import com.bolas.bolas.entity.Play;
+import com.bolas.bolas.entity.PlayId;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.FollowRepository;
 import com.bolas.bolas.repository.GroupRepository;
@@ -184,5 +186,30 @@ public class GroupService {
 		}
 		
 		return true;
+	}
+	
+	public ResponseEntity<Boolean> exit(ExitGroupDTO exit) {
+		Optional<Group> group = groupRepository.findById(exit.getGroup());
+		Optional<User> user = userRepository.findByEmailAndPassword(exit.getSession().getEmail(), exit.getSession().getPassword());
+		
+		if(group.isEmpty() || user.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		Optional<Play> play = playRepository.findById(new PlayId(user.get().getId(), group.get().getId()));
+		
+		if (play.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.CONFLICT);
+		}
+		
+		playRepository.delete(play.get());
+		
+		List<Play> plays = playRepository.findByGroup(group.get());
+		
+		if (plays.isEmpty()) {
+			groupRepository.delete(group.get());
+		}
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 }
