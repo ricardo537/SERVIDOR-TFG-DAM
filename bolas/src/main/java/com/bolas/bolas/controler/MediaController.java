@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.bolas.bolas.service.GroupService;
 import com.bolas.bolas.service.StorageService;
 import com.bolas.bolas.service.UserService;
 
@@ -38,8 +40,10 @@ public class MediaController {
 	private UserService userService;
 	@Autowired
 	private HttpServletRequest request;
-
-	@PostMapping("upload/profile/{email}")
+	@Autowired
+	private GroupService groupService;
+	
+	@PostMapping("/upload/profile/{email}")
 	public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile, @PathVariable String email) {
 		String path = storageService.store(multipartFile, email);
 		String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
@@ -55,7 +59,23 @@ public class MediaController {
 		return Map.of("url", "");
 	}
 	
-	@GetMapping("{fileName}")
+	@PostMapping("/upload/group/{id}")
+	public Map<String, String> uploadFileGroup(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID id) {
+		String path = storageService.storeGroupImg(multipartFile, id.toString());
+		String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+		String url = ServletUriComponentsBuilder
+				.fromHttpUrl(host)
+				.path("/bolas/api/media/")
+				.path(path)
+				.toUriString();
+		boolean success = this.groupService.updateImgGroup(url, id);
+		if (success) {
+			return Map.of("url", url);
+		}
+		return Map.of("url", "");
+	}
+	
+	@GetMapping("/{fileName}")
 	public ResponseEntity<Resource> getFile(@PathVariable String fileName) {
 		try {
 			Resource file = this.storageService.loadAsResource(fileName);

@@ -54,6 +54,24 @@ public class StorageService {
 		}
 	}
 	
+	public String storeGroupImg(MultipartFile file, String id) {
+		try {
+			if (file.isEmpty()) {
+				throw new RuntimeException("Failed to store empty file");
+			}
+			String fileName = id;
+			Path destinationFile = rootLocation.resolve(Paths.get(fileName))
+					.normalize().toAbsolutePath();
+			try (InputStream inputStream = file.getInputStream()){
+				
+				Files.copy(inputStream,  destinationFile, StandardCopyOption.REPLACE_EXISTING);
+			}
+			return fileName;
+		}  catch (Exception e) {
+			throw new RuntimeException("Hubo un error al conectar el inputStream" + e);
+		}
+	}
+	
 	public Resource loadAsResource(String fileName) {
 		try {
 			Path file = rootLocation.resolve(fileName);

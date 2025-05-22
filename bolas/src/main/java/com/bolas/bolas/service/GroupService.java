@@ -167,4 +167,22 @@ public class GroupService {
 		
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
+	
+	public boolean updateImgGroup(String img, UUID id) {
+		Optional<Group> group = groupRepository.findById(id);
+		
+		if (group.isEmpty()) {
+			return false;
+		}
+		
+		Group groupUpdated = group.get();
+		groupUpdated.setImg(img);
+		Group saved = groupRepository.save(groupUpdated);
+		
+		if (saved == null) {
+			return false;
+		}
+		
+		return true;
+	}
 }
