@@ -21,4 +21,6 @@ public interface ParticipateRepository extends JpaRepository<Participate, UUID> 
 	Optional<Participate> findByGroupAndEvent(Group group, Event event);
 	
 	List<Participate> findByEvent(Event event);
+	
+	void deleteByEvent(Event event);
 }

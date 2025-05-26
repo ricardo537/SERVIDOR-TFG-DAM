@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bolas.bolas.dto.EventDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
+import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.dto.JoinTeamDTO;
@@ -50,5 +51,10 @@ public class EventController {
 	@PostMapping("/joinTeam")
 	public ResponseEntity<Boolean> joinInTeam(@RequestBody JoinTeamDTO join) {
 		return eventService.joinEventInTeam(join);
+	}
+	
+	@PostMapping("/delete")
+	public ResponseEntity<Boolean> delete(@RequestBody IdDTO id) {
+		return eventService.deleteEvent(id.getId());
 	}
 }

@@ -100,7 +100,6 @@ public class EventService {
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
-	//Apuntarse dentro de un equipo
 	public ResponseEntity<Boolean> joinEventInTeam(JoinTeamDTO join) {
 		Optional<Event> event = eventRepository.findById(join.getEvent());
 		Optional<User> user = userRepository.findByEmailAndPassword(join.getSession().getEmail(), join.getSession().getPassword());
@@ -123,7 +122,6 @@ public class EventService {
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
-	//Desapuntarse de un evento
 	public ResponseEntity<Boolean> unjoinEvent(UnjoinEventDTO unjoin) {
 		Optional<Event> event = eventRepository.findById(unjoin.getEvent());
 		Optional<User> user = userRepository.findByEmailAndPassword(unjoin.getSession().getEmail(), unjoin.getSession().getPassword());
@@ -193,5 +191,21 @@ public class EventService {
 		}
 		
 		return false;
+	}
+	
+	public ResponseEntity<Boolean> deleteEvent(UUID id) {
+		Optional<Event> event = eventRepository.findById(id);
+		
+		if (event.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		List<Participate> participations = participateRepository.findByEvent(event.get());
+		participations.stream().forEach(p -> {
+			participateRepository.delete(p);
+		});
+		eventRepository.delete(event.get());
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 }
