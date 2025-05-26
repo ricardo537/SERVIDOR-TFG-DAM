@@ -69,6 +69,10 @@ public class GroupService {
 			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);	
 		}
 		
+		if (follower.get().equals(follows.get())) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.CONFLICT);
+		}
+		
 		Follow followToSaved = new Follow(follower.get(), follows.get());
 		Follow saved = followRepository.save(followToSaved);
 		
