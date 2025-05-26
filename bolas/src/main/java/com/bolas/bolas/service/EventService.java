@@ -18,6 +18,7 @@ import com.bolas.bolas.dto.FilterEventDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.dto.JoinTeamDTO;
+import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UnjoinEventDTO;
 import com.bolas.bolas.entity.Event;
 import com.bolas.bolas.entity.Group;
@@ -207,5 +208,21 @@ public class EventService {
 		eventRepository.delete(event.get());
 		
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	public ResponseEntity<List<EventDTO>> getMyCreatedEvents(SessionDTO session) {
+		Optional<User> user = userRepository.findByEmailAndPassword(session.getEmail(), session.getPassword());
+		
+		if (user.isEmpty()) {
+			return new ResponseEntity<List<EventDTO>>(List.of(), HttpStatus.NOT_FOUND);
+		}
+		
+		List<Event> events = eventRepository.findByUser(user.get());
+		List<EventDTO> result = events.stream().map(event -> {
+			List<Participate> participants = participateRepository.findByEvent(event);
+			return new EventDTO(event, user.get().getName(), participants.size());
+		}).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<EventDTO>>(result, HttpStatus.OK);
 	}
 }

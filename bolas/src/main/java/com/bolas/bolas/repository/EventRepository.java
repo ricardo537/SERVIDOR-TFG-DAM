@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.bolas.bolas.entity.Event;
+import com.bolas.bolas.entity.User;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID>{
@@ -20,4 +21,6 @@ public interface EventRepository extends JpaRepository<Event, UUID>{
 	Optional<Event> findById(UUID id);
 	
 	Page<Event> findByStartDateAfter(LocalDateTime startDate, Pageable pageable);
+	
+	List<Event> findByUser(User user);
 }

@@ -17,6 +17,7 @@ import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.dto.JoinTeamDTO;
+import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UnjoinEventDTO;
 import com.bolas.bolas.repository.EventRepository;
 import com.bolas.bolas.service.EventService;
@@ -56,5 +57,10 @@ public class EventController {
 	@PostMapping("/delete")
 	public ResponseEntity<Boolean> delete(@RequestBody IdDTO id) {
 		return eventService.deleteEvent(id.getId());
+	}
+	
+	@PostMapping("/getMyCreatedEvents")
+	public ResponseEntity<List<EventDTO>> getMyCreatedEvents(@RequestBody SessionDTO session) {
+		return eventService.getMyCreatedEvents(session);
 	}
 }
