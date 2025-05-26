@@ -63,4 +63,9 @@ public class EventController {
 	public ResponseEntity<List<EventDTO>> getMyCreatedEvents(@RequestBody SessionDTO session) {
 		return eventService.getMyCreatedEvents(session);
 	}
+	
+	@PostMapping("/getEventsIJoin")
+	public ResponseEntity<List<EventDTO>> getEventsIJoin(@RequestBody SessionDTO session) {
+		return eventService.getEventsIJoin(session);
+	}
 }

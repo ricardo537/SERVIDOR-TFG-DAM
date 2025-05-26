@@ -225,4 +225,28 @@ public class EventService {
 		
 		return new ResponseEntity<List<EventDTO>>(result, HttpStatus.OK);
 	}
+	
+	public ResponseEntity<List<EventDTO>> getEventsIJoin(SessionDTO session) {
+		Optional<User> user = userRepository.findByEmailAndPassword(session.getEmail(), session.getPassword());
+		
+		if (user.isEmpty()) {
+			return new ResponseEntity<List<EventDTO>>(List.of(), HttpStatus.NOT_FOUND);
+		}
+		
+		List<EventDTO> events = user.get().getParticipations().stream().map(participate -> {
+			if (participate.getParticipants().contains(user.get())) {
+				Optional<User> creator = userRepository.findById(participate.getEvent().getUser().getId());
+	
+				List<Participate> participants = participateRepository.findByEvent(participate.getEvent());
+				if (creator.isEmpty()) {
+					return new EventDTO(participate.getEvent(), "El usuario ya no existe", participants.size());
+				} else {
+					return new EventDTO(participate.getEvent(), creator.get().getName(), participants.size());
+				}
+			}
+			return null;
+		}).filter(event -> event != null).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<EventDTO>>(events, HttpStatus.OK);
+	}
 }
