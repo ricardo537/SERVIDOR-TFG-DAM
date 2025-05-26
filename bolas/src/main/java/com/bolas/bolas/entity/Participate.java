@@ -3,6 +3,7 @@ package com.bolas.bolas.entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -87,6 +88,15 @@ public class Participate {
 	
 	public void addParticipant(User user) {
 		participants.add(user);
+	}
+	
+	public void subtractParticipant(User user) {
+		participants = participants.stream().map(p -> {
+			if (p.equals(user)) {
+				return null;
+			}
+			return p;
+		}).collect(Collectors.toList());
 	}
 	
 }

@@ -17,6 +17,8 @@ import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
+import com.bolas.bolas.dto.JoinTeamDTO;
+import com.bolas.bolas.dto.UnjoinEventDTO;
 import com.bolas.bolas.entity.Event;
 import com.bolas.bolas.entity.Group;
 import com.bolas.bolas.entity.Participate;
@@ -60,7 +62,6 @@ public class EventService {
 		return new ResponseEntity<Boolean>(false, HttpStatus.NOT_ACCEPTABLE);
 	}
 	
-	//FALTA TERMINARLO
 	public ResponseEntity<Boolean> join(JoinEventDTO join) {
 		Optional<User> user = userRepository.findByEmailAndPassword(join.getSession().getEmail(), join.getSession().getPassword());
 		Optional<Event> event = eventRepository.findById(join.getEvent());
@@ -96,6 +97,50 @@ public class EventService {
 		
 		participateRepository.save(participate);
 		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	//Apuntarse dentro de un equipo
+	public ResponseEntity<Boolean> joinEventInTeam(JoinTeamDTO join) {
+		Optional<Event> event = eventRepository.findById(join.getEvent());
+		Optional<User> user = userRepository.findByEmailAndPassword(join.getSession().getEmail(), join.getSession().getPassword());
+		Optional<Group> group = groupRepository.findById(join.getGroup());
+		
+		if (event.isEmpty() || user.isEmpty() || group.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		Optional<Participate> participate = participateRepository.findByGroupAndEvent(group.get(), event.get());
+		
+		if (participate.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.CONFLICT);
+		}
+		
+		Participate participated = participate.get();
+		participated.addParticipant(user.get());
+		participateRepository.save(participated);
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+	}
+	
+	//Desapuntarse de un evento
+	public ResponseEntity<Boolean> unjoinEvent(UnjoinEventDTO unjoin) {
+		Optional<Event> event = eventRepository.findById(unjoin.getEvent());
+		Optional<User> user = userRepository.findByEmailAndPassword(unjoin.getSession().getEmail(), unjoin.getSession().getPassword());
+		
+		if (event.isEmpty() || user.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		List<Participate> participations = participateRepository.findByEvent(event.get());
+		participations.stream().forEach(participation -> {
+			participation.subtractParticipant(user.get());
+			if (participation.getParticipants().size() == 0) {
+				participateRepository.delete(participation);
+			} else {
+				participateRepository.save(participation);
+			}
+		});
 		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	

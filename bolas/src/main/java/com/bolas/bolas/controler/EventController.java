@@ -15,6 +15,9 @@ import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
+import com.bolas.bolas.dto.JoinTeamDTO;
+import com.bolas.bolas.dto.UnjoinEventDTO;
+import com.bolas.bolas.repository.EventRepository;
 import com.bolas.bolas.service.EventService;
 
 @RestController
@@ -37,5 +40,15 @@ public class EventController {
 	@PostMapping("/join")
 	public ResponseEntity<Boolean> join(@RequestBody JoinEventDTO join) {
 		return eventService.join(join);
+	}
+	
+	@PostMapping("/unjoin")
+	public ResponseEntity<Boolean> unjoin(@RequestBody UnjoinEventDTO unjoin) {
+		return eventService.unjoinEvent(unjoin);
+	}
+	
+	@PostMapping("/joinTeam")
+	public ResponseEntity<Boolean> joinInTeam(@RequestBody JoinTeamDTO join) {
+		return eventService.joinEventInTeam(join);
 	}
 }
