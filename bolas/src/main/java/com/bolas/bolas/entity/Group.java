@@ -32,6 +32,9 @@ public class Group {
 	
 	@OneToMany(mappedBy = "group")
 	private List<Play> plays;
+	
+	@OneToMany(mappedBy = "group")
+	private List<Participate> participations;
 
 	public Group() {
 		super();

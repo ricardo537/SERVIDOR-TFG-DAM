@@ -16,9 +16,14 @@ import com.bolas.bolas.dto.EventDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
+import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.entity.Event;
+import com.bolas.bolas.entity.Group;
+import com.bolas.bolas.entity.Participate;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.EventRepository;
+import com.bolas.bolas.repository.GroupRepository;
+import com.bolas.bolas.repository.ParticipateRepository;
 import com.bolas.bolas.repository.UserRepository;
 
 @Service
@@ -27,7 +32,14 @@ public class EventService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired EventRepository eventRepository;
+	@Autowired 
+	private EventRepository eventRepository;
+	
+	@Autowired
+	private GroupRepository groupRepository;
+	
+	@Autowired
+	private ParticipateRepository participateRepository;
 	
 	public ResponseEntity<Boolean> publish(EventPublishDTO eventData) {
 		LocalDateTime now = LocalDateTime.now();
@@ -50,7 +62,41 @@ public class EventService {
 	
 	//FALTA TERMINARLO
 	public ResponseEntity<Boolean> join(JoinEventDTO join) {
-		return null;
+		Optional<User> user = userRepository.findByEmailAndPassword(join.getSession().getEmail(), join.getSession().getPassword());
+		Optional<Event> event = eventRepository.findById(join.getEvent());
+		
+		
+		if (user.isEmpty() || event.isEmpty()) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		
+		Participate participate = new Participate();
+		
+		participate.addParticipant(user.get());
+		participate.setEvent(event.get());
+		
+		if (join.getGroup() != null) {
+			Optional<Group> group = groupRepository.findById(join.getGroup());
+			if (group.isPresent()) {
+				participate.setGroup(group.get());
+			} else {
+				return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+			}
+		}
+		
+		List<Participate> participations = participateRepository.findByEvent(event.get());
+		
+		List<Boolean> isJoined = participations.stream().map(p -> {
+			 return p.getParticipants().contains(user.get());
+		}).filter(pa -> pa).collect(Collectors.toList());
+		
+		if (isJoined.size() >= 1) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.CONFLICT);
+		}
+		
+		participateRepository.save(participate);
+		
+		return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 	}
 	
 	public ResponseEntity<List<EventDTO>> getFilteredEvents(FilterEventDTO filter, int page, int size) {
@@ -67,15 +113,19 @@ public class EventService {
 		List<Event> events = eventRepository.findByStartDateAfter(filter.getStartDate(), PageRequest.of(page, size)).getContent();
 		List<EventDTO> eventsDTO = events.stream()
 				.map((event) -> {
-					//Falta comprobar si hay plazas
 					String name;
 					if (event.getUser() == null) {
 						name = "El usuario ya no existe";
 					} else {
 						name = event.getUser().getName();
 					}
-					if (isValidEvent(event, user.get(), filter)) {
-						return new EventDTO(event, name,0);
+					List<Participate> participations = participateRepository.findByEvent(event);
+					List<Boolean> isJoined = participations.stream().map(p -> {
+						 return p.getParticipants().contains(user.get());
+					}).filter(pa -> pa == true).collect(Collectors.toList());
+					
+					if (isJoined.size() == 0 && isValidEvent(event, user.get(), filter)) {
+						return new EventDTO(event, name, participations.size());
 					}
 					return null;
 				}).filter(e -> e != null)
@@ -86,10 +136,14 @@ public class EventService {
 	
 	public boolean isValidEvent(Event event, User user, FilterEventDTO filter) {
 		if (event.getGender().equals(user.getGender()) || event.getGender().equals("mixto")) {
-			//Falta comprobar que no esté lleno
-			if ((event.getGender().equals(filter.getGender()) || filter.getGender().equals("")) && (filter.getSport().equals(event.getSport()) || filter.getSport().equals("")) &&
-					(filter.getType().equals(event.getType()) || filter.getType().equals("")) && (filter.getTypeParticipant().equals(event.getTypeParticipant()) || filter.getTypeParticipant().equals(""))) {
-				return true;
+			List<Participate> participations = participateRepository.findByEvent(event);
+			if (participations.size() < event.getMaxParticipants()) {
+				if (!participations.contains(user)) {
+					if ((event.getGender().equals(filter.getGender()) || filter.getGender().equals("")) && (filter.getSport().equals(event.getSport()) || filter.getSport().equals("")) &&
+							(filter.getType().equals(event.getType()) || filter.getType().equals("")) && (filter.getTypeParticipant().equals(event.getTypeParticipant()) || filter.getTypeParticipant().equals(""))) {
+						return true;
+					}
+				}
 			}
 		}
 		

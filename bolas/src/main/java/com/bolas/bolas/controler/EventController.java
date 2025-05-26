@@ -14,6 +14,7 @@ import com.bolas.bolas.dto.EventDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
+import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.service.EventService;
 
 @RestController

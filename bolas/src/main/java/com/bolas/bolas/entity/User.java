@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -50,6 +51,9 @@ public class User {
 	private List<Follow> followers;
 	@OneToMany(mappedBy = "member")
 	private List<Play> plays;
+	@ManyToMany(mappedBy = "participants")
+	private List<Participate> participations;
+	
 	public User(UUID id, String email, String password, String name, String description, String img, String gender) {
 		super();
 		this.id = id;
@@ -105,6 +109,12 @@ public class User {
 	public User() {
 		super();
 	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(description, email, events, followers, following, gender, id, img, name, participations,
+				password, plays);
+	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -115,7 +125,11 @@ public class User {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(description, other.description) && Objects.equals(email, other.email)
-				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
+				&& Objects.equals(events, other.events) && Objects.equals(followers, other.followers)
+				&& Objects.equals(following, other.following) && Objects.equals(gender, other.gender)
+				&& Objects.equals(id, other.id) && Objects.equals(img, other.img) && Objects.equals(name, other.name)
+				&& Objects.equals(participations, other.participations) && Objects.equals(password, other.password)
+				&& Objects.equals(plays, other.plays);
 	}
 	public List<Event> getEvents() {
 		return events;
@@ -141,5 +155,13 @@ public class User {
 	public void setPlays(List<Play> plays) {
 		this.plays = plays;
 	}
+	public List<Participate> getParticipations() {
+		return participations;
+	}
+	public void setParticipations(List<Participate> participations) {
+		this.participations = participations;
+	}
+	
+	
 	
 }
