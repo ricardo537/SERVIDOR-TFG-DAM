@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.DeleteDTO;
+import com.bolas.bolas.dto.GetProfileDTO;
 import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.ProfileDTO;
@@ -60,8 +61,8 @@ public class UserController {
 	}
 	
 	@PostMapping("getProfile")
-	public ResponseEntity<ProfileDTO> getProfile(@RequestBody IdDTO id) {
-		return userService.getProfile(id);
+	public ResponseEntity<ProfileDTO> getProfile(@RequestBody GetProfileDTO profile) {
+		return userService.getProfile(profile);
 	}
 	
 	@PostMapping("getMyId")

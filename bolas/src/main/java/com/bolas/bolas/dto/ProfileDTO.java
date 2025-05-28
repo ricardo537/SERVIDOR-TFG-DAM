@@ -15,8 +15,9 @@ public class ProfileDTO {
 	private long follows;
 	private StatsDSDTO stats;
 	private String gender;
+	private boolean follow;
 	
-	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats, String gender) {
+	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats, String gender, boolean follow) {
 		super();
 		Id = id;
 		this.name = name;
@@ -26,6 +27,7 @@ public class ProfileDTO {
 		this.follows = follows;
 		this.stats = stats;
 		this.gender = gender;
+		this.follow = follow;
 	}
 
 	public ProfileDTO() {
@@ -96,7 +98,15 @@ public class ProfileDTO {
 		this.gender = gender;
 	}
 
-	public static ProfileDTO toProfile(User user, Stats stats, long followers, long follows) {
-		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), followers, follows, StatsDSDTO.toStatsDSDTO(stats), user.getGender());
+	public boolean isFollow() {
+		return follow;
+	}
+
+	public void setFollow(boolean follow) {
+		this.follow = follow;
+	}
+
+	public static ProfileDTO toProfile(User user, Stats stats, long followers, long follows, boolean follow) {
+		return new ProfileDTO(user.getId(), user.getName(), user.getDescription(), user.getImg(), followers, follows, StatsDSDTO.toStatsDSDTO(stats), user.getGender(), follow);
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.DeleteDTO;
+import com.bolas.bolas.dto.GetProfileDTO;
 import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.LoginDTO;
 import com.bolas.bolas.dto.ProfileDTO;
@@ -17,6 +18,7 @@ import com.bolas.bolas.dto.RegisterDTO;
 import com.bolas.bolas.dto.SessionDTO;
 import com.bolas.bolas.dto.UpdateDTO;
 import com.bolas.bolas.dto.UserResumeDTO;
+import com.bolas.bolas.entity.Follow;
 import com.bolas.bolas.entity.Stats;
 import com.bolas.bolas.entity.User;
 import com.bolas.bolas.repository.EventRepository;
@@ -128,10 +130,11 @@ public class UserService {
 		return false;
 	}
 	
-	public ResponseEntity<ProfileDTO> getProfile(IdDTO id) {
-		Optional<User> user = userRepository.findById(id.getId());
+	public ResponseEntity<ProfileDTO> getProfile(GetProfileDTO profile) {
+		Optional<User> user = userRepository.findById(profile.getId());
+		Optional<User> asking = userRepository.findByEmailAndPassword(profile.getSession().getEmail(), profile.getSession().getPassword());
 		
-		if (user.isEmpty()) {
+		if (user.isEmpty() || asking.isEmpty()) {
 			return new ResponseEntity<ProfileDTO>(new ProfileDTO(), HttpStatus.NOT_FOUND);
 		}
 		
@@ -144,10 +147,14 @@ public class UserService {
 			sts = stats.get();
 		}
 		
+		List<Follow> followers_list = followRepository.findByFollows(user.get());
+		List<Boolean> itFollows = followers_list.stream().map(f-> {
+			return f.getFollower().equals(asking.get());
+		}).filter(fo -> fo).collect(Collectors.toList());
 		long followers = followRepository.countByFollows(user.get());
 		long follows = followRepository.countByFollower(user.get());
 		
-		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts, followers, follows), HttpStatus.OK);
+		return new ResponseEntity<ProfileDTO>(ProfileDTO.toProfile(user.get(), sts, followers, follows, itFollows.size() != 0), HttpStatus.OK);
 	}
 	
 	public ResponseEntity<IdDTO> getMyId(SessionDTO session) {

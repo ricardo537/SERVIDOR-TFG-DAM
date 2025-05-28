@@ -50,7 +50,7 @@ public class EventService {
 			Optional<User> user = userRepository.findByEmailAndPassword(eventData.getSession().getEmail(), eventData.getSession().getPassword());
 			
 			if (user.isPresent()) {
-				Event event = new Event(eventData.getName(), eventData.getDescription(), eventData.getDescription(), eventData.getStartDate(), eventData.getEndDate(),
+				Event event = new Event(eventData.getName(), eventData.getDescription(), eventData.getAddress(), eventData.getStartDate(), eventData.getEndDate(),
 						now, eventData.getType(), eventData.getSport(), eventData.getMinParticipants(), eventData.getMaxParticipants(),
 						eventData.getPrice(), eventData.getGender(), eventData.getTypeParticipant(), user.get());
 				
