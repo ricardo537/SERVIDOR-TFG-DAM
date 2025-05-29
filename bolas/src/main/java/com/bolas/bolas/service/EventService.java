@@ -13,8 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.bolas.bolas.dto.EventDTO;
+import com.bolas.bolas.dto.EventGroupDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
+import com.bolas.bolas.dto.GetGroupEventDTO;
+import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
 import com.bolas.bolas.dto.JoinTeamDTO;
@@ -248,5 +251,21 @@ public class EventService {
 		}).filter(event -> event != null).collect(Collectors.toList());
 		
 		return new ResponseEntity<List<EventDTO>>(events, HttpStatus.OK);
+	}
+	
+	public ResponseEntity<List<EventGroupDTO>> getEventsOfGroup(GetGroupEventDTO g) {
+		Optional<Group> group = groupRepository.findById(g.getId());
+		Optional<User> user = userRepository.findByEmailAndPassword(g.getSession().getEmail(), g.getSession().getPassword());
+		
+		if (group.isEmpty() || user.isEmpty()) {
+			return new ResponseEntity<List<EventGroupDTO>>(List.of(), HttpStatus.NOT_FOUND);
+		}
+		
+		List<Participate> participations = participateRepository.findByGroup(group.get());
+		List<EventGroupDTO> events = participations.stream().map(p -> {
+			return new EventGroupDTO(p.getEvent(), p.getEvent().getUser().getName(), p.getParticipants().size(), p.getParticipants().contains(user.get()));
+		}).collect(Collectors.toList());
+		
+		return new ResponseEntity<List<EventGroupDTO>>(events, HttpStatus.OK);
 	}
 }

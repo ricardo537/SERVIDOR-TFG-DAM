@@ -7,7 +7,7 @@ import com.bolas.bolas.entity.User;
 
 public class ProfileDTO {
 	
-	private UUID Id;
+	private UUID id;
 	private String name;
 	private String description;
 	private String img;
@@ -19,7 +19,7 @@ public class ProfileDTO {
 	
 	public ProfileDTO(UUID id, String name, String description, String img, long followers, long follows, StatsDSDTO stats, String gender, boolean follow) {
 		super();
-		Id = id;
+		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.img = img;
@@ -35,11 +35,11 @@ public class ProfileDTO {
 	}
 
 	public UUID getId() {
-		return Id;
+		return this.id;
 	}
 
 	public void setId(UUID id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getName() {

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bolas.bolas.dto.EventDTO;
+import com.bolas.bolas.dto.EventGroupDTO;
 import com.bolas.bolas.dto.EventPublishDTO;
 import com.bolas.bolas.dto.FilterEventDTO;
+import com.bolas.bolas.dto.GetGroupEventDTO;
 import com.bolas.bolas.dto.IdDTO;
 import com.bolas.bolas.dto.JoinEventDTO;
 import com.bolas.bolas.dto.JoinLinkDTO;
@@ -67,5 +69,10 @@ public class EventController {
 	@PostMapping("/getEventsIJoin")
 	public ResponseEntity<List<EventDTO>> getEventsIJoin(@RequestBody SessionDTO session) {
 		return eventService.getEventsIJoin(session);
+	}
+	
+	@PostMapping("/getEventsOfGroup")
+	public ResponseEntity<List<EventGroupDTO>> getEventsOfGroup(@RequestBody GetGroupEventDTO g) {
+		return eventService.getEventsOfGroup(g);
 	}
 }
