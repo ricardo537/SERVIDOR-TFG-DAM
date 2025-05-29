@@ -88,4 +88,9 @@ public class GroupController {
 	public ResponseEntity<List<UserResumeDTO>> getMembers(@RequestBody IdDTO id) {
 		return groupService.getMembers(id.getId());
 	}
+	
+	@GetMapping("/getGroup/{id}") 
+	public ResponseEntity<GroupResumeDTO> getGroup(@PathVariable UUID id) {
+		return groupService.getGroup(id);
+	}
 }

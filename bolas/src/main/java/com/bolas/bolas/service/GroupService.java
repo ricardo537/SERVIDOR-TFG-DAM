@@ -229,4 +229,14 @@ public class GroupService {
 		
 		return new ResponseEntity<List<UserResumeDTO>>(members, HttpStatus.OK);
 	}
+	
+	public ResponseEntity<GroupResumeDTO> getGroup(UUID id) {
+		Optional<Group> group = groupRepository.findById(id);
+		
+		if (group.isEmpty()) {
+			return new ResponseEntity<GroupResumeDTO>(new GroupResumeDTO(), HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<GroupResumeDTO>(new GroupResumeDTO(group.get()), HttpStatus.OK);
+	}
 }
