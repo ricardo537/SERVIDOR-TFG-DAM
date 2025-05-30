@@ -117,7 +117,7 @@ public class UserService {
 		User userUpdated = updateData.updateUser(user.get());
 		userRepository.save(userUpdated);
 		
-		return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.ACCEPTED);
+		return new ResponseEntity<SessionDTO>(updateData.getSession(), HttpStatus.OK);
 	}
 	
 	public boolean updateProfileImg(String email, String fileName) {
